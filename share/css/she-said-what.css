@@ -1,0 +1,60 @@
+body {
+    margin-top: 5px;
+}
+
+#tagline {
+    font-size: 150%;
+    font-style: italic;
+    margin-top: 0.2em;
+}
+
+#bd {
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+#content {
+    border-right: 1px solid black;
+}
+
+#page-title {
+    font-size: 250%;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+}
+
+#ellipsis {
+    color: #f00;
+}
+
+#sayings {
+    margin: 0;
+    padding-top: 2px;
+}
+
+#sayings li {
+    border-top: 1px solid black;
+    list-style-type: none;
+    margin: 0 2em 0 0;
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+
+#sayings li quote {
+    color: #611;
+    font-size: 200%;
+}
+
+#sayings li .commentary {
+    font-size: 140%;
+}
+
+#sidebar {
+    padding-left: 0.5em;
+    font-size: 120%;
+}
+
+#ft {
+    background-color: #d9d9d9;
+    padding: 1em;
+}

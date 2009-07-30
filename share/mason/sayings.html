@@ -1,0 +1,34 @@
+                <ul id="sayings">
+% for my $saying (@sayings) {
+                  <li>
+                    <quote>&#8223;<% $saying->quote() %>&#8221;</quote>
+%   if ( $saying->has_commentary() ) {
+                    <div class="commentary"><% $saying->commentary() %></div>
+%   }
+                  </li>
+% }
+                </ul>
+
+% if ($prev) {
+<a href="<% $prev %>">\
+%   if ($prev eq 'index.html') {
+Most recently said\
+%   } else {
+Towards the future\
+%   }
+</a>
+% }
+
+% if ( $prev && $next ) {
+|
+% }
+
+% if ($next) {
+<a href="<% $next %>">Into the past</a>
+% }
+
+<%args>
+@sayings
+$next
+$prev
+</%args>

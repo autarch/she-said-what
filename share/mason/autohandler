@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+          "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+  <head>
+    <title>She Said What?!</title>
+    <link rel="stylesheet" href="/css/yui-reset-fonts-grids.css" type="text/css">
+    <link rel="stylesheet" href="/css/yui-base.css" type="text/css">
+    <link rel="stylesheet" href="/css/she-said-what.css" type="text/css">
+  </head>
+
+  <body>
+    <div id="doc3" class="yui-t5">
+
+      <div id="hd">
+        <img id="logo" src="/images/she-said-what.png" alt="She Said What?!" />
+        <div id="tagline">A logorrheic journal</div>
+      </div>
+
+      <div id="bd">
+	<div id="yui-main">
+	  <div class="yui-b">
+            <div class="yui-g">
+              <div id="content">
+
+% $m->call_next();
+
+              </div>
+	    </div>
+          </div>
+	</div>
+
+
+	<div class="yui-b">
+% if ( $m->request_comp()->attr('sidebar') ) {
+          <div id="sidebar">
+            These are things my wife has said. These quotes are not
+            made up, and are as accurate as my memory allows.
+
+            <ul>
+              <li><a href="about.html">About us and this site</a></li>
+            </ul>
+          </div>
+% }
+        </div>
+	
+      </div>
+      <div id="ft">
+        <p>Copyright 2009</p>
+      </div>
+    </div>
+  </body>
+</html>
+
+<%attr>
+sidebar => 1
+</%attr>
