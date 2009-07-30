@@ -13,7 +13,7 @@
     <div id="doc3" class="yui-t5">
 
       <div id="hd">
-        <img id="logo" src="/images/she-said-what.png" alt="She Said What?!" />
+        <a href="/"><img id="logo" src="/images/she-said-what.png" alt="She Said What?!" /></a>
         <div id="tagline">A logorrheic journal</div>
       </div>
 
