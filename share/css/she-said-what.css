@@ -40,13 +40,27 @@ body {
     padding-top: 1em;
 }
 
+#sayings .date {
+    float: left;
+    margin-top: 0.4em;
+}
+
+#sayings li .saying {
+    margin-left: 7em;
+}
+
 #sayings li quote {
     color: #611;
+    font-family: "Bitstream Vera Serif", serif;
     font-size: 200%;
 }
 
 #sayings li .commentary {
     font-size: 140%;
+}
+
+#history-links {
+    font-size: 120%;
 }
 
 #sidebar {

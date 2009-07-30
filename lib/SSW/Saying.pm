@@ -13,10 +13,11 @@ use Moose;
 use MooseX::StrictConstructor;
 
 
-has date =>
+has datetime =>
     ( is       => 'ro',
       isa      => 'DateTime',
       required => 1,
+      handles  => [ 'date' ],
     );
 
 has quote =>
@@ -45,8 +46,8 @@ sub from_file
     die "$file contains no quote"
         unless defined $quote && length $quote;
 
-    my %p = ( date  => $dt,
-              quote => $quote,
+    my %p = ( datetime => $dt,
+              quote    => $quote,
             );
 
     $p{commentary} = $commentary

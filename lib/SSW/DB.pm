@@ -30,13 +30,19 @@ has _sayings =>
 
 sub _build_sayings
 {
-    return [ SSW::Saying->new( date => DateTime->today( time_zone => 'UTC' ),
+    return [ SSW::Saying->new( datetime => DateTime->today( time_zone => 'UTC' ),
                                quote      => 'I like furry meat.',
                                commentary => '... after biting my arm.',
                              ),
-             map { SSW::Saying->new( date => DateTime->today( time_zone => 'UTC' ),
-                               quote => 'I am crazy.',
-                             ) } 1..43,
+             ( map { SSW::Saying->new( datetime => DateTime->today( time_zone => 'UTC' ),
+                                       quote => 'I am crazy.',
+                                     ) } 1..6 ),
+             ( map { SSW::Saying->new( datetime => DateTime->today( time_zone => 'UTC' )->subtract( days => 1 ),
+                                       quote => 'I am crazy.',
+                                     ) } 1..8 ),
+             ( map { SSW::Saying->new( datetime => DateTime->today( time_zone => 'UTC' )->subtract( days => 2 ),
+                                       quote => 'I am crazy.',
+                                     ) } 1..22 ),
            ];
 }
 
