@@ -177,7 +177,23 @@ sub _deploy_site
 {
     my $self = shift;
 
-    rcopy( $self->_temp_dir(), $self->target() );
+    if ( $self->target() =~ /:/ )
+    {
+        $self->_remote_deploy_site();
+    }
+    else
+    {
+        $self->_copy_dir( $self->_temp_dir(), $self->target() );
+    }
+}
+
+sub _remote_deploy_site
+{
+    my $self = shift;
+
+    system( 'scp', '-r',
+            glob( $self->_temp_dir() . '/*' ), $self->target() )
+        and die;
 }
 
 no Moose;
