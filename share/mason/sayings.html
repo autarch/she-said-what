@@ -1,22 +1,7 @@
 % my $prev_date;
                 <ul id="sayings">
 % for my $saying (@sayings) {
-                  <li>
-                    <div class="date">
-%   if ( ! $prev_date || $saying->date ne $prev_date ) {
-<% $saying->date %>
-%   } else {
-&nbsp;
-%   }
-                    </div>
-                    <div class="saying">
-                      <quote>&#8223;<% $saying->quote() %>&#8221;</quote>
-%   if ( $saying->has_commentary() ) {
-                      <br />
-                      <span class="commentary"><% $saying->commentary() %></span>
-%   }
-                    </div>
-                  </li>
+<& saying-li.mas, saying => $saying, show_date => ( ! $prev_date || $prev_date ne $saying->date() ) &>
 %   $prev_date = $saying->date;
 % }
                 </ul>

@@ -74,7 +74,7 @@ sub _write_sayings
 {
     my $self = shift;
 
-    my $component =
+    my $list_comp =
         MasonX::StaticBuilder::Component->new
                 ( { comp_root => $self->_builder()->input_dir(),
                     comp_name =>
@@ -82,7 +82,23 @@ sub _write_sayings
                         ( abs_path('./share/mason/sayings.html') ),
                   } );
 
+    my $saying_comp =
+        MasonX::StaticBuilder::Component->new
+                ( { comp_root => $self->_builder()->input_dir(),
+                    comp_name =>
+                    $self->_builder()->_get_comp_name
+                        ( abs_path('./share/mason/one-saying.html') ),
+                  } );
+
     my @sayings = $self->_db()->sayings();
+
+    for my $saying (@sayings)
+    {
+        my $output = $saying_comp->fill_in( saying => $saying );
+
+        my $outfile = $self->_temp_dir()->file( $saying->uri_path() . '.html' );
+        write_file( $outfile->stringify(), $output );
+    }
 
     my ( $prev, $cur, $next ) = ( undef, 'index.html', 'sayings2.html' );
 
@@ -95,13 +111,13 @@ sub _write_sayings
 
         undef $next unless @sayings;
 
-        my $output = $component->fill_in( sayings => \@for_page,
+        my $output = $list_comp->fill_in( sayings => \@for_page,
                                           prev    => $prev,
                                           next    => $next,
                                         );
 
-        my $outfile = File::Spec->catfile( $self->_temp_dir(), $cur );
-        $self->_builder()->_write_file( $outfile, $output );
+        my $outfile = $self->_temp_dir()->file($cur);
+        write_file( $outfile->stringify(), $output );
 
         $prev = $cur;
         $cur  = $next;

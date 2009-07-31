@@ -1,0 +1,21 @@
+                  <li>
+                    <div class="date">
+% if ($show_date) {
+<% $saying->date | h %>
+% } else {
+&nbsp;
+% }
+                    </div>
+                    <div class="saying">
+                      <quote>&#8223;<% $saying->quote() | h %>&#8221;</quote>
+%   if ( $saying->has_commentary() ) {
+                      <br />
+                      <span class="commentary"><% $saying->commentary() | h %></span>
+%   }
+                    </div>
+                  </li>
+
+<%args>
+$saying
+$show_date => 1
+</%args>

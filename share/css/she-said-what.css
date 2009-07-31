@@ -2,6 +2,18 @@ body {
     margin-top: 5px;
 }
 
+h1 {
+    font-size: 200%;
+}
+
+h2 {
+    font-size: 170%;
+}
+
+p {
+    font-size: 120%;
+}
+
 #tagline {
     font-size: 150%;
     font-style: italic;
@@ -42,6 +54,7 @@ body {
 
 #sayings .date {
     float: left;
+    font-size: 100%;
     margin-top: 0.4em;
 }
 

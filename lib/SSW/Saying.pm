@@ -12,7 +12,7 @@ use SSW::Types qw( NonEmptySimpleStr NonEmptyStr );
 use Moose;
 use MooseX::StrictConstructor;
 
-has _datetime =>
+has datetime =>
     ( is       => 'ro',
       isa      => 'DateTime',
       required => 1,
@@ -37,6 +37,14 @@ has commentary =>
     ( is        => 'ro',
       isa       => NonEmptyStr,
       predicate => 'has_commentary',
+    );
+
+has uri_path =>
+    ( is       => 'ro',
+      isa      => 'Str',
+      lazy     => 1,
+      default  => sub { $_[0]->datetime()->iso8601() },
+      init_arg => undef,
     );
 
 sub new_from_file
@@ -78,7 +86,7 @@ sub write_to_dir
     my $self = shift;
     my $dir  = shift;
 
-    my $file = join q{/}, $dir, $self->_datetime()->iso8601();
+    my $file = join q{/}, $dir, $self->datetime()->iso8601();
 
     my $content = $self->quote();
 
@@ -95,7 +103,7 @@ sub _build_date
 {
     my $self = shift;
 
-    return $self->_datetime()->clone()->set_time_zone('America/Chicago')->strftime( '%b %{day}, %Y' );
+    return $self->datetime()->clone()->set_time_zone('America/Chicago')->strftime( '%b %{day}, %Y' );
 }
 
 no Moose;

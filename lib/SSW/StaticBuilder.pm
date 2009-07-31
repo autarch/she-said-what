@@ -13,7 +13,9 @@ sub write {
                         ->start($self->input_dir());
     while (my $c = $rule->match()) {
         next if $c =~ /\.hg/;
+        next if $c =~ /\.mas$/;
         next if $c =~ /sayings\.html/;
+        next if $c =~ /one-saying\.html/;
 
         my $comp_name = $self->_get_comp_name($c);
         my $component = MasonX::StaticBuilder::Component->new({

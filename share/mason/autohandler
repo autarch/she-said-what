@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/yui-reset-fonts-grids.css" type="text/css">
     <link rel="stylesheet" href="/css/yui-base.css" type="text/css">
     <link rel="stylesheet" href="/css/she-said-what.css" type="text/css">
+    <link rel="alternate" href="/atom.xml" type="application/atom+xml" title="Atom Feed" />
   </head>
 
   <body>
@@ -46,7 +47,7 @@
 	
       </div>
       <div id="ft">
-        <p>Copyright 2009</p>
+        <p>Copyright 2009 House Absolute Consulting</p>
       </div>
     </div>
   </body>
