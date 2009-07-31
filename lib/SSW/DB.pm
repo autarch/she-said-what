@@ -3,6 +3,7 @@ package SSW::DB;
 use strict;
 use warnings;
 
+use Path::Class qw( file );
 use SSW::Saying;
 use SSW::Types qw( Dir ArrayRef );
 
@@ -12,7 +13,8 @@ use MooseX::StrictConstructor;
 
 has dir =>
     ( is       => 'ro',
-      isa      => Dir,
+      isa      => 'Path::Class::Dir',
+      coerce   => 1,
       required => 1,
     );
 
@@ -30,20 +32,19 @@ has _sayings =>
 
 sub _build_sayings
 {
-    return [ SSW::Saying->new( datetime => DateTime->today( time_zone => 'UTC' ),
-                               quote      => 'I like furry meat.',
-                               commentary => '... after biting my arm.',
-                             ),
-             ( map { SSW::Saying->new( datetime => DateTime->today( time_zone => 'UTC' ),
-                                       quote => 'I am crazy.',
-                                     ) } 1..6 ),
-             ( map { SSW::Saying->new( datetime => DateTime->today( time_zone => 'UTC' )->subtract( days => 1 ),
-                                       quote => 'I am crazy.',
-                                     ) } 1..8 ),
-             ( map { SSW::Saying->new( datetime => DateTime->today( time_zone => 'UTC' )->subtract( days => 2 ),
-                                       quote => 'I am crazy.',
-                                     ) } 1..22 ),
-           ];
+    my $self = shift;
+
+    my $dir = $self->dir();
+
+    my @sayings;
+    for my $file ( map { file($_) } grep { -f } sort { $b cmp $a } glob "$dir/[0-9]*" )
+    {
+        next unless SSW::Saying->is_saying_file($file);
+
+        push @sayings, SSW::Saying->new_from_file($file);
+    }
+
+    return \@sayings,
 }
 
 no Moose;

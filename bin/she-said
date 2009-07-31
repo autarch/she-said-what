@@ -1,0 +1,8 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use SSW::SheSaid;
+
+SSW::SheSaid->new_with_options()->run();

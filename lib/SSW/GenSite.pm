@@ -10,33 +10,14 @@ use File::Spec;
 use File::Temp qw( tempdir );
 use MasonX::StaticBuilder::Component;
 use SSW::DB;
+use SSW::RCFile;
 use SSW::StaticBuilder;
 use SSW::Types qw( Dir );
 
 use Moose;
 use MooseX::StrictConstructor;
 
-with 'MooseX::Getopt::Dashes';
-
-has db_dir =>
-    ( is       => 'ro',
-      isa      => Dir,
-      required => 1,
-    );
-
-has _db =>
-    ( is       => 'ro',
-      isa      => 'SSW::DB',
-      lazy     => 1,
-      default  => sub { SSW::DB->new( dir => $_[0]->db_dir() ) },
-      init_arg => undef,
-    );
-
-has target =>
-    ( is      => 'ro',
-      isa     => 'Str',
-      default => '/tmp/she-said-what',
-    );
+with 'SSW::CLI';
 
 has _builder =>
     ( is       => 'ro',
@@ -46,9 +27,10 @@ has _builder =>
       init_arg => undef,
     );
 
-has _temp_dir => 
+has _temp_dir =>
    ( is       => 'ro',
       isa      => Dir,
+      coerce   => 1,
       lazy     => 1,
       default  => sub { tempdir( CLEANUP => 1 ) },
       init_arg => undef,
@@ -73,6 +55,8 @@ sub run
     $self->_create_atom();
 
     $self->_deploy_site();
+
+    print "Deployed site to ", $self->target(), "\n";
 }
 
 sub _copy_dir

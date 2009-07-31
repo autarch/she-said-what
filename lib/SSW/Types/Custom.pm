@@ -8,10 +8,15 @@ use MooseX::Types
                     )
                 ];
 use MooseX::Types::Moose qw( Str );
+use MooseX::Types::Path::Class ();
 
 subtype Dir,
-    as      Str,
-    where   { -d },
+    as      'Path::Class::Dir',
+    where   { -d $_ },
     message { "$_ is not a directory" };
+
+coerce Dir,
+    from Str,
+    via  { Path::Class::Dir->new($_) };
 
 1;
