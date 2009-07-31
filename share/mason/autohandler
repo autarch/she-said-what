@@ -47,7 +47,7 @@
 	
       </div>
       <div id="ft">
-        <p>Copyright 2009 House Absolute Consulting</p>
+        <p>Copyright 2009 <span style="color: red">&copy;</span> House Absolute Consulting</p>
       </div>
     </div>
   </body>
