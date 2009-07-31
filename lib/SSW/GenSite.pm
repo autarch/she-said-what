@@ -6,6 +6,7 @@ use warnings;
 use Cwd qw( abs_path );
 use File::Basename qw( basename );
 use File::Copy::Recursive qw( rcopy );
+use File::Slurp qw( write_file );
 use File::Spec;
 use File::Temp qw( tempdir );
 use MasonX::StaticBuilder::Component;
@@ -13,6 +14,8 @@ use SSW::DB;
 use SSW::RCFile;
 use SSW::StaticBuilder;
 use SSW::Types qw( Dir );
+use XML::Feed;
+use XML::Feed::Entry;
 
 use Moose;
 use MooseX::StrictConstructor;
@@ -35,7 +38,6 @@ has _temp_dir =>
       default  => sub { tempdir( CLEANUP => 1 ) },
       init_arg => undef,
     );
-
 
 sub run
 {
@@ -110,7 +112,45 @@ sub _write_sayings
 
 sub _create_atom
 {
+    my $self = shift;
 
+    my @sayings = $self->_db()->sayings();
+    @sayings = splice @sayings, 0, 10
+        if @sayings > 10;
+
+    my $feed = XML::Feed->new('Atom');
+
+    $feed->title('She Said What?!');
+    $feed->link('http://shesaidwh.at/');
+    $feed->tagline('A logorrheic journal');
+    $feed->author('She');
+    $feed->copyright('Copyright 2009 House Absolute Consulting');
+    $feed->modified( DateTime->now( time_zone => 'UTC' ) );
+
+    for my $saying (@sayings)
+    {
+        my $entry = XML::Feed::Entry->new();
+        $entry->title( $saying->quote() );
+
+        my $uri = 'http://shesaidwh.at/' . $saying->uri_path() . '.html';
+        $entry->id($uri);
+        $entry->link($uri);
+
+        if ( $saying->has_commentary() )
+        {
+            $entry->content( $saying->commentary() );
+        }
+
+        $entry->issued( $saying->datetime() );
+        $entry->modified( DateTime->now( time_zone => 'UTC' ) );
+        $entry->author('She');
+
+
+        $feed->add_entry($entry);
+    }
+
+    my $file = $self->_temp_dir()->file('atom.xml');
+    write_file( $file->stringify(), $feed->as_xml() );
 }
 
 sub _deploy_site
