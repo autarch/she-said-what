@@ -15,7 +15,7 @@
 
       <div id="hd">
         <a href="/"><img id="logo" src="/images/she-said-what.png" alt="She Said What?!" /></a>
-        <div id="tagline">A logorrheic journal</div>
+        <div id="tagline"><% SSW::GenSite->Tagline | h %></div>
       </div>
 
       <div id="bd">

@@ -39,6 +39,10 @@ has _temp_dir =>
       init_arg => undef,
     );
 
+my $Tagline = 'A logorrheic journal by proxy';
+
+sub Tagline { $Tagline }
+
 sub run
 {
     my $self = shift;
@@ -138,7 +142,7 @@ sub _create_atom
 
     $feed->title('She Said What?!');
     $feed->link('http://shesaidwh.at/');
-    $feed->tagline('A logorrheic journal');
+    $feed->tagline($Tagline);
     $feed->author('She');
     $feed->copyright('Copyright 2009 House Absolute Consulting');
     $feed->modified( DateTime->now( time_zone => 'UTC' ) );
