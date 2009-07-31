@@ -191,7 +191,7 @@ sub _remote_deploy_site
 {
     my $self = shift;
 
-    system( 'scp', '-r',
+    system( 'scp', '-q', '-r',
             glob( $self->_temp_dir() . '/*' ), $self->target() )
         and die;
 }
