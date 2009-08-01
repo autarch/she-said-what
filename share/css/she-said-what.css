@@ -70,6 +70,7 @@ p {
 
 #sayings li .commentary {
     font-size: 140%;
+    margin-left: 0.1em;
 }
 
 #history-links {
