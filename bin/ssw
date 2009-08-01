@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd /home/autarch/projects/she-said-what
+export PERL5LIB=./lib
+
+bin/she-said --what "$1"
+bin/gen-site
