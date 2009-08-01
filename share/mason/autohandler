@@ -35,7 +35,7 @@
 	<div class="yui-b">
 % if ( $m->request_comp()->attr('sidebar') ) {
           <div id="sidebar">
-            These are things my wife has actually said. Theese quotes
+            These are things my wife has actually said. These quotes
             as accurate as my memory allows.
 
             <ul>
