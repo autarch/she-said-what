@@ -3,6 +3,9 @@
 use strict;
 use warnings;
 
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
 use SSW::SheSaid;
 
 SSW::SheSaid->new_with_options()->run();
