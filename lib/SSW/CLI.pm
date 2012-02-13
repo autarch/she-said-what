@@ -3,6 +3,7 @@ package SSW::CLI;
 use strict;
 use warnings;
 
+use SSW::RCFile;
 use SSW::Types qw( Dir NonEmptySimpleStr );
 
 use Moose::Role;
