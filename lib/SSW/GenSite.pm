@@ -11,7 +11,6 @@ use File::Spec;
 use File::Temp qw( tempdir );
 use MasonX::StaticBuilder::Component;
 use SSW::DB;
-use SSW::RCFile;
 use SSW::StaticBuilder;
 use SSW::Types qw( Dir );
 use XML::Feed;
