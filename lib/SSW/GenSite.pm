@@ -21,38 +21,37 @@ use MooseX::StrictConstructor;
 
 with 'SSW::CLI';
 
-has _builder =>
-    ( is       => 'ro',
-      isa      => 'SSW::StaticBuilder',
-      lazy     => 1,
-      default  => sub { SSW::StaticBuilder->new('./share/mason') },
-      init_arg => undef,
-    );
+has _builder => (
+    is       => 'ro',
+    isa      => 'SSW::StaticBuilder',
+    lazy     => 1,
+    default  => sub { SSW::StaticBuilder->new('./share/mason') },
+    init_arg => undef,
+);
 
-has _temp_dir =>
-   ( is       => 'ro',
-      isa      => Dir,
-      coerce   => 1,
-      lazy     => 1,
-      default  => sub { tempdir( CLEANUP => 1 ) },
-      init_arg => undef,
-    );
+has _temp_dir => (
+    is       => 'ro',
+    isa      => Dir,
+    coerce   => 1,
+    lazy     => 1,
+    default  => sub { tempdir( CLEANUP => 1 ) },
+    init_arg => undef,
+);
 
 my $Tagline = 'A logorrheic journal by proxy';
 
 sub Tagline { $Tagline }
 
-sub run
-{
+sub run {
     my $self = shift;
 
     $self->_builder()->write( $self->_temp_dir() );
 
-    for my $dir ( qw( css images js ) )
-    {
-        $self->_copy_dir( File::Spec->catdir( 'share', $dir ),
-                          File::Spec->catdir( $self->_temp_dir(), $dir ),
-                        );
+    for my $dir (qw( css images js )) {
+        $self->_copy_dir(
+            File::Spec->catdir( 'share',            $dir ),
+            File::Spec->catdir( $self->_temp_dir(), $dir ),
+        );
     }
 
     $self->_write_sayings();
@@ -64,8 +63,7 @@ sub run
     print "Deployed site to ", $self->target(), "\n";
 }
 
-sub _copy_dir
-{
+sub _copy_dir {
     my $self   = shift;
     my $source = shift;
     my $target = shift;
@@ -73,51 +71,52 @@ sub _copy_dir
     rcopy( $source, $target );
 }
 
-sub _write_sayings
-{
+sub _write_sayings {
     my $self = shift;
 
-    my $list_comp =
-        MasonX::StaticBuilder::Component->new
-                ( { comp_root => $self->_builder()->input_dir(),
-                    comp_name =>
-                    $self->_builder()->_get_comp_name
-                        ( abs_path('./share/mason/sayings.html') ),
-                  } );
+    my $list_comp = MasonX::StaticBuilder::Component->new(
+        {
+            comp_root => $self->_builder()->input_dir(),
+            comp_name =>
+                $self->_builder()->_get_comp_name
+                ( abs_path('./share/mason/sayings.html') ),
+        }
+    );
 
-    my $saying_comp =
-        MasonX::StaticBuilder::Component->new
-                ( { comp_root => $self->_builder()->input_dir(),
-                    comp_name =>
-                    $self->_builder()->_get_comp_name
-                        ( abs_path('./share/mason/one-saying.html') ),
-                  } );
+    my $saying_comp = MasonX::StaticBuilder::Component->new(
+        {
+            comp_root => $self->_builder()->input_dir(),
+            comp_name =>
+                $self->_builder()->_get_comp_name
+                ( abs_path('./share/mason/one-saying.html') ),
+        }
+    );
 
     my @sayings = $self->_db()->sayings();
 
-    for my $saying (@sayings)
-    {
+    for my $saying (@sayings) {
         my $output = $saying_comp->fill_in( saying => $saying );
 
-        my $outfile = $self->_temp_dir()->file( $saying->uri_path() . '.html' );
+        my $outfile
+            = $self->_temp_dir()->file( $saying->uri_path() . '.html' );
         write_file( $outfile->stringify(), $output );
     }
 
     my ( $prev, $cur, $next ) = ( undef, 'index.html', 'sayings2.html' );
 
-    while (@sayings)
-    {
-        my @for_page =
-              @sayings >= 10
+    while (@sayings) {
+        my @for_page
+            = @sayings >= 10
             ? ( splice @sayings, 0, 10 )
             : ( splice @sayings, 0, scalar @sayings );
 
         undef $next unless @sayings;
 
-        my $output = $list_comp->fill_in( sayings => \@for_page,
-                                          prev    => $prev,
-                                          next    => $next,
-                                        );
+        my $output = $list_comp->fill_in(
+            sayings => \@for_page,
+            prev    => $prev,
+            next    => $next,
+        );
 
         my $outfile = $self->_temp_dir()->file($cur);
         write_file( $outfile->stringify(), $output );
@@ -129,8 +128,7 @@ sub _write_sayings
     }
 }
 
-sub _create_atom
-{
+sub _create_atom {
     my $self = shift;
 
     my @sayings = $self->_db()->sayings();
@@ -146,8 +144,7 @@ sub _create_atom
     $feed->copyright('Copyright 2009 House Absolute Consulting');
     $feed->modified( DateTime->now( time_zone => 'UTC' ) );
 
-    for my $saying (@sayings)
-    {
+    for my $saying (@sayings) {
         my $entry = XML::Feed::Entry->new();
         $entry->title( $saying->quote() );
 
@@ -155,15 +152,13 @@ sub _create_atom
         $entry->id($uri);
         $entry->link($uri);
 
-        if ( $saying->has_commentary() )
-        {
+        if ( $saying->has_commentary() ) {
             $entry->content( $saying->commentary() );
         }
 
         $entry->issued( $saying->datetime() );
         $entry->modified( DateTime->now( time_zone => 'UTC' ) );
         $entry->author('She');
-
 
         $feed->add_entry($entry);
     }
@@ -172,27 +167,24 @@ sub _create_atom
     write_file( $file->stringify(), $feed->as_xml() );
 }
 
-sub _deploy_site
-{
+sub _deploy_site {
     my $self = shift;
 
-    if ( $self->target() =~ /:/ )
-    {
+    if ( $self->target() =~ /:/ ) {
         $self->_remote_deploy_site();
     }
-    else
-    {
+    else {
         $self->_copy_dir( $self->_temp_dir(), $self->target() );
     }
 }
 
-sub _remote_deploy_site
-{
+sub _remote_deploy_site {
     my $self = shift;
 
-    system( 'scp', '-q', '-r',
-            glob( $self->_temp_dir() . '/*' ), $self->target() )
-        and die;
+    system(
+        'scp',                             '-q', '-r',
+        glob( $self->_temp_dir() . '/*' ), $self->target()
+    ) and die;
 }
 
 no Moose;

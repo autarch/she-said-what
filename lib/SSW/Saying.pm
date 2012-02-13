@@ -12,43 +12,42 @@ use SSW::Types qw( NonEmptySimpleStr NonEmptyStr );
 use Moose;
 use MooseX::StrictConstructor;
 
-has datetime =>
-    ( is       => 'ro',
-      isa      => 'DateTime',
-      required => 1,
-      init_arg => 'datetime',
-    );
+has datetime => (
+    is       => 'ro',
+    isa      => 'DateTime',
+    required => 1,
+    init_arg => 'datetime',
+);
 
-has date =>
-    ( is       => 'ro',
-      isa      => NonEmptySimpleStr,
-      lazy     => 1,
-      builder  => '_build_date',
-      init_arg => undef,
-    );
+has date => (
+    is       => 'ro',
+    isa      => NonEmptySimpleStr,
+    lazy     => 1,
+    builder  => '_build_date',
+    init_arg => undef,
+);
 
-has quote =>
-    ( is       => 'ro',
-      isa      => NonEmptySimpleStr,
-      required => 1,
-    );
+has quote => (
+    is       => 'ro',
+    isa      => NonEmptySimpleStr,
+    required => 1,
+);
 
-has commentary =>
-    ( is        => 'ro',
-      isa       => NonEmptyStr,
-      predicate => 'has_commentary',
-    );
+has commentary => (
+    is        => 'ro',
+    isa       => NonEmptyStr,
+    predicate => 'has_commentary',
+);
 
-has uri_path =>
-    ( is       => 'ro',
-      isa      => 'Str',
-      lazy     => 1,
-      default  => sub { $_[0]->datetime()->iso8601() },
-      init_arg => undef,
-    );
+has uri_path => (
+    is       => 'ro',
+    isa      => 'Str',
+    lazy     => 1,
+    default  => sub { $_[0]->datetime()->iso8601() },
+    init_arg => undef,
+);
 
-sub new_from_file
-{
+sub new_from_file {
     my $class = shift;
     my $file  = shift;
 
@@ -63,9 +62,10 @@ sub new_from_file
     die "$file contains no quote"
         unless defined $quote && length $quote;
 
-    my %p = ( datetime => $dt,
-              quote    => $quote,
-            );
+    my %p = (
+        datetime => $dt,
+        quote    => $quote,
+    );
 
     $p{commentary} = $commentary
         if defined $commentary && length $commentary;
@@ -73,16 +73,14 @@ sub new_from_file
     return $class->new(%p);
 }
 
-sub is_saying_file
-{
+sub is_saying_file {
     my $class = shift;
     my $file  = shift;
 
     return $file->basename() =~ /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d/;
 }
 
-sub write_to_dir
-{
+sub write_to_dir {
     my $self = shift;
     my $dir  = shift;
 
@@ -90,8 +88,7 @@ sub write_to_dir
 
     my $content = $self->quote();
 
-    if ( $self->has_commentary() )
-    {
+    if ( $self->has_commentary() ) {
         $content .= "\n";
         $content .= $self->commentary();
     }
@@ -99,11 +96,11 @@ sub write_to_dir
     write_file( $file, $content );
 }
 
-sub _build_date
-{
+sub _build_date {
     my $self = shift;
 
-    return $self->datetime()->clone()->set_time_zone('America/Chicago')->strftime( '%b %{day}, %Y' );
+    return $self->datetime()->clone()->set_time_zone('America/Chicago')
+        ->strftime('%b %{day}, %Y');
 }
 
 no Moose;

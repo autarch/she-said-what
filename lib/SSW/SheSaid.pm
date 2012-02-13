@@ -12,25 +12,24 @@ use MooseX::StrictConstructor;
 
 with 'SSW::CLI';
 
-has what =>
-    ( is       => 'ro',
-      isa      => NonEmptySimpleStr,
-      required => 1,
-    );
+has what => (
+    is       => 'ro',
+    isa      => NonEmptySimpleStr,
+    required => 1,
+);
 
-sub run
-{
+sub run {
     my $self = shift;
 
     my ( $quote, $commentary ) = split /\|/, $self->what();
     $commentary =~ s/\|/\n/g
         if defined $commentary;
 
-    my $saying =
-        SSW::Saying->new( datetime   => DateTime->now( time_zone => 'UTC' ),
-                          quote      => $quote,
-                          ( defined $commentary ? ( commentary => $commentary ) : () ),
-                        );
+    my $saying = SSW::Saying->new(
+        datetime => DateTime->now( time_zone => 'UTC' ),
+        quote    => $quote,
+        ( defined $commentary ? ( commentary => $commentary ) : () ),
+    );
 
     $saying->write_to_dir( $self->db_dir() );
 }
