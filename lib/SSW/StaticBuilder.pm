@@ -50,7 +50,7 @@ sub write {
 sub _write_file {
     my ( $self, $outfile, $output ) = @_;
     open( OUT, ">", $outfile ) or carp "Can't open output file $outfile: $!";
-    binmode OUT, ':utf8';
+    binmode OUT, ':encoding(utf8)';
     print OUT $output;
     close OUT;
 }
